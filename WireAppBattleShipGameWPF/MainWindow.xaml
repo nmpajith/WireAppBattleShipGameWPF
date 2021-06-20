@@ -1,0 +1,93 @@
+﻿<Window x:Class="WireAppBattleShipGameWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WireAppBattleShipGameWPF" xmlns:local1="clr-namespace:WireAppBattleShipGameWPF.ValueConverters"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="800" Width="1300" WindowStartupLocation="CenterScreen"
+        DataContext="{Binding Source={StaticResource Locator}, Path=MainViewModel}">
+    <Window.Resources>
+        <local1:OccupationStatusToColorConverter x:Key="OccupationStatusToColorConverter" />
+        <local1:OccupationStatusToColorConverterAutoPlayer x:Key="OccupationStatusToColorConverterAutoPlayer" />
+    </Window.Resources>
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="500"/>
+            <ColumnDefinition Width="500"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Player: " FontSize="16"/>
+                    <TextBlock Text="{Binding Path=Game.RealPlayer.Name}" FontSize="16"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Result: " FontSize="16"/>
+                    <TextBlock Text="{Binding Path=Game.RealPlayer.HitResult}" FontSize="16"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Points: " FontSize="16"/>
+                    <TextBlock Text="{Binding Path=Game.RealPlayer.Points}" FontSize="16"/>
+                </StackPanel>
+            </StackPanel>
+            <ItemsControl Grid.Row="1" Width="400" Height="400" ItemsSource="{Binding Path=Game.RealPlayer.GamePanel.Panels}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Grid.Row="0" Columns="10" Rows="10"></UniformGrid>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="" Background="{Binding Path=OccupationStatus, Converter={StaticResource OccupationStatusToColorConverter},
+                        Mode=OneWay}" Command="{Binding ElementName=CatergoriesControl, Path=DataContext.SelectCatergoryCommand}" CommandParameter="{Binding}" Width="40" Height="40" VerticalAlignment="Top" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+        <Grid Grid.Column="1" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Player: " FontSize="16"/>
+                    <TextBlock Text="{Binding Path=Game.AutoPlayer.Name}" FontSize="16"/> 
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Result: " FontSize="16"/>
+                    <TextBlock Text="{Binding Path=Game.AutoPlayer.HitResult}" FontSize="16"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Points: " FontSize="16"/>
+                    <TextBlock Text="{Binding Path=Game.AutoPlayer.Points}" FontSize="16"/>
+                </StackPanel>
+            </StackPanel>
+            <ItemsControl Grid.Row="1" x:Name="AutoPlayerGamePanel"  Width="400" Height="400" ItemsSource="{Binding Path=Game.AutoPlayer.GamePanel.Panels}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Grid.Row="0" Columns="10" Rows="10"></UniformGrid>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="" Background="{Binding Path=OccupationStatus, Converter={StaticResource OccupationStatusToColorConverterAutoPlayer},
+                        Mode=OneWay}" Command="{Binding ElementName=AutoPlayerGamePanel, Path=DataContext.FireShotCommand}" CommandParameter="{Binding}" Width="40" Height="40" VerticalAlignment="Top" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+        <Grid Grid.Column="2">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock></TextBlock>
+                <Button Command="{Binding ExecuteCommand}" Content="Start" Height="70" Width="109" />
+            </StackPanel>
+        </Grid>
+    </Grid>    
+</Window>
